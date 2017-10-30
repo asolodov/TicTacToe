@@ -1,0 +1,5 @@
+.vs
+bundle
+bin
+node_modules
+obj
