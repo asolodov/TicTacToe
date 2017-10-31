@@ -55,9 +55,9 @@ const GridModel = (function () {
             },
             getColumns: function () {
                 let columns = [];
-                for (var i = 0; i < this.width; i++) {
+                for (let i = 0; i < this.width; i++) {
                     let col = [];
-                    for (var j = 0; j < this.height; j++) {
+                    for (let j = 0; j < this.height; j++) {
                         col.push(this._getCell(i, j));
                     }
                     columns.push(col);

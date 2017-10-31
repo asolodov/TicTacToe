@@ -31,7 +31,7 @@ const WinService = (function () {
                     || this._checkWinInDownDiagonalies();
             },
             _checkWinIn: function (cellGroups, minCellCount) {
-                const lngFilter = _.filter(cellGroups, (group) => group.length >= minCellCount);
+                const lngFilter = _.filter(cellGroups, group => group.length >= minCellCount);
                 const strGroupsArr = WinSearchHelper.mapCellGroupsToStringGroups(lngFilter);
 
                 return WinSearchHelper.searchWinnerInStringGroups(strGroupsArr, CellState.TIC, minCellCount)
@@ -64,7 +64,7 @@ const WinSearchHelper = (function () {
 
     WinSearchHelper.searchWinnerInStringGroups = function (cellStringGroups, searchState, winCellCount) {
         const arr = Array(winCellCount + 1).join(searchState.toString());
-        for (var i = 0; i < cellStringGroups.length; i++) {
+        for (let i = 0; i < cellStringGroups.length; i++) {
             const obj = cellStringGroups[i];
             const indx = obj.str.indexOf(arr);
             if (indx !== -1) {
@@ -77,7 +77,7 @@ const WinSearchHelper = (function () {
     };
 
     WinSearchHelper.mapCellGroupsToStringGroups = function (cellGroups) {
-        return _.map(cellGroups, (group) => {
+        return cellGroups.map(group => {
             return {
                 str: WinSearchHelper.mapCellsToString(group),
                 group: group
@@ -86,7 +86,7 @@ const WinSearchHelper = (function () {
     };
 
     WinSearchHelper.mapCellsToString = function (cells) {
-        return _.map(cells, (cell) => {
+        return cells.map(cell => {
             return cell.state !== CellState.NONE ? cell.state.toString() : '-';
         }).join('');
     };

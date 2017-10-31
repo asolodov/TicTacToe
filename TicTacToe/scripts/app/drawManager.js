@@ -1,28 +1,42 @@
 ﻿const _ = require('lodash');
 const PIXI = require('pixi.js');
 const WinType = require('./winService').WinType;
+const CellState = require('./gridModel').CellState;
 
 let DrawManager = (function () {
     const defaultOptions = {
-        width: 800,
-        height: 600,
-        backgroundColor: 0x1099bb,
         element: null,
         onCellSelected: function () { },
-        cellHeight: 100,
-        cellWidth: 100
+        colors: {
+            backgroundColor: 0xFFFFFF,
+            cellLineColor: 0x000000,
+            cellColor: 0xE8E8E8,
+            toeLineColor: 0x000000,
+            ticLineColor: 0x000000,
+            winCrossColor: 0xFF0000
+        },
+        sizes: {
+            areaWidth: 800,
+            areaHeight: 600,
+            cellWidth: 50,
+            cellHeight: 50,
+            cellLineWidth: 2,
+            ticLineWidth: 5,
+            toeLineWidth: 5,
+            winCrossWidth: 7
+        }
     };
 
     function DrawManager(gridModel, options) {
         this._gridModel = gridModel;
-        this._options = _.extend({}, defaultOptions, options);
+        this._options = _.merge(defaultOptions, options);
     }
 
     _.extend(DrawManager.prototype, {
         init: function () {
-            this._pixiApp = new PIXI.Application(this._options.width, this._options.height,
+            this._pixiApp = new PIXI.Application(this._options.sizes.areaWidth, this._options.sizes.areaHeight,
                 {
-                    backgroundColor: this._options.backgroundColor
+                    backgroundColor: this._options.colors.backgroundColor
                 });
 
             this._options.element.appendChild(this._pixiApp.view);
@@ -38,7 +52,7 @@ let DrawManager = (function () {
         },
         drawWinner: function (winner) {
             const graphics = new PIXI.Graphics();
-            graphics.lineStyle(10, 0x00FF00, 1);
+            graphics.lineStyle(this._options.sizes.winCrossWidth, this._options.colors.winCrossColor, 1);
 
             switch (winner.type) {
                 case WinType.ROW:
@@ -69,18 +83,18 @@ let DrawManager = (function () {
             switch (arguments.length) {
                 case 0:
                     return {
-                        x: this._options.cellWidth,
-                        y: this._options.cellHeight
+                        x: this._options.sizes.cellWidth,
+                        y: this._options.sizes.cellHeight
                     };
                 case 1:
                     return {
-                        x: arguments[0].x * this._options.cellWidth,
-                        y: arguments[0].y * this._options.cellHeight
+                        x: arguments[0].x * this._options.sizes.cellWidth,
+                        y: arguments[0].y * this._options.sizes.cellHeight
                     };
                 case 2:
                     return {
-                        x: arguments[0] * this._options.cellWidth,
-                        y: arguments[1] * this._options.cellHeight
+                        x: arguments[0] * this._options.sizes.cellWidth,
+                        y: arguments[1] * this._options.sizes.cellHeight
                     };
                 default:
                     throw new Error('Incorrect parameters');
@@ -89,21 +103,21 @@ let DrawManager = (function () {
         _drawCell: function (cell) {
             let graphics = new PIXI.Graphics();
 
-            graphics.lineStyle(2, 0x0000FF, 1);
-            graphics.beginFill(0xFF700B, 1);
+            graphics.lineStyle(this._options.sizes.cellLineWidth, this._options.colors.cellLineColor, 1);
+            graphics.beginFill(this._options.colors.cellColor, 1);
 
             const pos = this._getCellPosition(cell);
-            graphics.drawRect(pos.x, pos.y, this._options.cellHeight, this._options.cellWidth);
+            graphics.drawRect(pos.x, pos.y, this._options.sizes.cellHeight, this._options.sizes.cellWidth);
 
-            if (cell.state === 0) {
+            if (cell.state === CellState.TOE) {
                 this._drawCellToe(graphics, cell);
-            } else if (cell.state === 1) {
+            } else if (cell.state === CellState.TIC) {
                 this._drawCellTic(graphics, cell);
             }
 
             graphics.interactive = true;
             graphics.hitArea = graphics.getBounds();
-            var that = this;
+            let that = this;
             graphics.click = function (e) {
                 that._handleCellClick(cell);
             };
@@ -114,36 +128,36 @@ let DrawManager = (function () {
             this._options.onCellSelected(cell);
         },
         _drawCellToe: function (graphics, cell) {
-            graphics.lineStyle(5, 0x000000, 1);
-            const rad = 50,
+            graphics.lineStyle(this._options.sizes.toeLineWidth, this._options.colors.toeLineColor, 1);
+            const rad = Math.min(this._options.sizes.cellWidth, this._options.sizes.cellHeight) / 2,
                 pos = this._getCellPosition(cell),
                 delt = 5;
             graphics.drawCircle(pos.x + rad, pos.y + rad, rad - delt);
         },
         _drawCellTic: function (graphics, cell) {
-            graphics.lineStyle(5, 0x000000, 1);
+            graphics.lineStyle(this._options.sizes.ticLineWidth, this._options.colors.ticLineColor, 1);
             const pos = this._getCellPosition(cell),
                 delt = 5;
             graphics.moveTo(pos.x + delt, pos.y + delt);
-            graphics.lineTo(pos.x + this._options.cellWidth - delt, pos.y + this._options.cellHeight - delt);
-            graphics.moveTo(pos.x + this._options.cellWidth - delt, pos.y + delt);
-            graphics.lineTo(pos.x + delt, pos.y + this._options.cellHeight - delt);
+            graphics.lineTo(pos.x + this._options.sizes.cellWidth - delt, pos.y + this._options.sizes.cellHeight - delt);
+            graphics.moveTo(pos.x + this._options.sizes.cellWidth - delt, pos.y + delt);
+            graphics.lineTo(pos.x + delt, pos.y + this._options.sizes.cellHeight - delt);
         },
         _drawCrossHorizontalCells: function (graphics, cells) {
             let firstPos = this._getCellPosition(cells[0]),
                 lastPos = this._getCellPosition(cells.slice(-1)[0]);
 
-            const linePosY = (firstPos.y + this._options.cellHeight / 2);
+            const linePosY = (firstPos.y + this._options.sizes.cellHeight / 2);
             graphics.moveTo(firstPos.x, linePosY);
-            graphics.lineTo(lastPos.x + this._options.cellWidth, linePosY);
+            graphics.lineTo(lastPos.x + this._options.sizes.cellWidth, linePosY);
         },
         _drawCrossVerticalCells: function (graphics, cells) {
             let firstPos = this._getCellPosition(cells[0]),
                 lastPos = this._getCellPosition(cells.slice(-1)[0]);
 
-            const linePosX = (firstPos.x + this._options.cellWidth / 2);
+            const linePosX = (firstPos.x + this._options.sizes.cellWidth / 2);
             graphics.moveTo(linePosX, firstPos.y);
-            graphics.lineTo(linePosX, lastPos.y + this._options.cellHeight);
+            graphics.lineTo(linePosX, lastPos.y + this._options.sizes.cellHeight);
         },
         _drawCrossUpDiagonalCells: function (graphics, cells) {
             let firstPos = this._getCellPosition(cells[0]),
@@ -154,8 +168,8 @@ let DrawManager = (function () {
                 lastPos = t;
             }
 
-            graphics.moveTo(firstPos.x, firstPos.y + this._options.cellHeight);
-            graphics.lineTo(lastPos.x + this._options.cellWidth, lastPos.y);
+            graphics.moveTo(firstPos.x, firstPos.y + this._options.sizes.cellHeight);
+            graphics.lineTo(lastPos.x + this._options.sizes.cellWidth, lastPos.y);
         },
         _drawCrossDownDiagonalCells: function (graphics, cells) {
             let firstPos = this._getCellPosition(cells[0]),
@@ -167,7 +181,7 @@ let DrawManager = (function () {
             }
 
             graphics.moveTo(firstPos.x, firstPos.y);
-            graphics.lineTo(lastPos.x + this._options.cellWidth, lastPos.y + this._options.cellHeight);
+            graphics.lineTo(lastPos.x + this._options.sizes.cellWidth, lastPos.y + this._options.sizes.cellHeight);
         }
     });
 

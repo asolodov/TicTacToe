@@ -17,7 +17,11 @@ module.exports = (function () {
         this._drawManager = new DrawManager(this._gridModel,
             {
                 element: this._options.areaElement,
-                onCellSelected: this._cellSelected.bind(this)
+                onCellSelected: this._cellSelected.bind(this),
+                sizes: {
+                    areaWidth: 400,
+                    areaHeight: 300
+                }
             });
         this._winService = new WinService(this._gridModel, { winCellsCount: 4 });
     };
