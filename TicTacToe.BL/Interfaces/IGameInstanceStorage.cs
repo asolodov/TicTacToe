@@ -2,7 +2,7 @@
 
 namespace TicTacToe.BL.Interfaces
 {
-    public interface IActiveGameInstanceManager
+    public interface IGameInstanceStorage
     {
         void AddGameInstance(IGameInstance instance);
         void RemoveGameInstance(IGameInstance instance);

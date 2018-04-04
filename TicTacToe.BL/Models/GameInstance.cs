@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TicTacToe.BL.Interfaces;
+using TicTacToe.BL.Models.Messages;
 
 namespace TicTacToe.BL.Models
 {
@@ -27,15 +29,17 @@ namespace TicTacToe.BL.Models
             }
         }
 
-        public void StartGame()
+        public async Task StartGame()
+        {
+            await _userCommunicationService.SendGameStartedMessage(PlayerOne.ConnectionId, new GameStartedMessage(PlayerOne.PlayerCell));
+            await _userCommunicationService.SendGameStartedMessage(PlayerTwo.ConnectionId, new GameStartedMessage(PlayerTwo.PlayerCell));
+        }
+
+        public async Task StopGame()
         {
         }
 
-        public void StopGame()
-        {
-        }
-
-        public void HandleUserMessage(User fromUser, BaseMessage message)
+        public async Task HandleUserMessage(User fromUser, BaseMessage message)
         {
         }
     }

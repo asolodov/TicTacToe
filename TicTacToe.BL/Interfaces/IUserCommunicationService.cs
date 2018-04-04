@@ -1,10 +1,10 @@
 ﻿using System.Threading.Tasks;
-using TicTacToe.BL.Models;
+using TicTacToe.BL.Models.Messages;
 
 namespace TicTacToe.BL.Interfaces
 {
     public interface IUserCommunicationService
     {
-        Task SendMessage(User toUser, BaseMessage message);
+        Task SendGameStartedMessage(string connectionId, GameStartedMessage message);
     }
 }

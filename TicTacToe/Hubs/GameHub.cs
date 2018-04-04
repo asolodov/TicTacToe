@@ -20,7 +20,7 @@ namespace TicTacToe.Hubs
 
         public override async Task OnConnectedAsync()
         {
-            _gameManager.ConnectUser(Context.ConnectionId);
+            await _gameManager.ConnectUser(Context.ConnectionId);
             await base.OnConnectedAsync();
         }
 

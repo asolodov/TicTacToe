@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using TicTacToe.BL.Interfaces;
 using TicTacToe.BL.Models;
 
 namespace TicTacToe.BL
 {
-    public class GameInstanceManager : IActiveGameInstanceManager
+    public class GameInstanceStorage : IGameInstanceStorage
     {
         private Dictionary<string, IGameInstance> _runningGames = new Dictionary<string, IGameInstance>();
 

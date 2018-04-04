@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TicTacToe.DataContracts;
 
 namespace TicTacToe.AutoMapping
 {
@@ -6,7 +7,7 @@ namespace TicTacToe.AutoMapping
     {
         public TicTacToeProfile()
         {
-            //TODO add automappings
+            CreateMap<BL.Models.Messages.GameStartedMessage, GameStartedMessage>();
         }
     }
 }

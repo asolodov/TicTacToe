@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TicTacToe.BL.Models;
 
 namespace TicTacToe.BL.Interfaces
@@ -7,8 +8,8 @@ namespace TicTacToe.BL.Interfaces
     {
         IEnumerable<string> UserIds { get; }
 
-        void StartGame();
-        void StopGame();
-        void HandleUserMessage(User fromUser, BaseMessage message);
+        Task StartGame();
+        Task StopGame();
+        Task HandleUserMessage(User fromUser, BaseMessage message);
     }
 }

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using TicTacToe.BL.Interfaces;
 using TicTacToe.BL.Models;
 
@@ -11,22 +10,22 @@ namespace TicTacToe.BL
 
         private readonly IUserCommunicationService _userCommunicationService;
         private readonly IUserStorage _userStorage;
-        private readonly IActiveGameInstanceManager _gameInstanceManager;
+        private readonly IGameInstanceStorage _gameInstanceStorage;
         private readonly IGameInstanceFactory _gameInstanceFactory;
 
         public GameManager(
             IUserCommunicationService userCommunicationService,
             IUserStorage userStorage,
-            IActiveGameInstanceManager gameInstanceManager,
+            IGameInstanceStorage gameInstanceStorage,
             IGameInstanceFactory gameInstanceFactory)
         {
             _userCommunicationService = userCommunicationService;
             _userStorage = userStorage;
-            _gameInstanceManager = gameInstanceManager;
+            _gameInstanceStorage = gameInstanceStorage;
             _gameInstanceFactory = gameInstanceFactory;
         }
 
-        public void ConnectUser(string connectionId)
+        public async Task ConnectUser(string connectionId)
         {
             //TODO handle concurrency
             var user = _userStorage.CreateUser(connectionId);
@@ -37,9 +36,9 @@ namespace TicTacToe.BL
             else
             {
                 var game = _gameInstanceFactory.CreateGameInstance(_awaitableUser, user);
-                _gameInstanceManager.AddGameInstance(game);
+                _gameInstanceStorage.AddGameInstance(game);
                 _awaitableUser = null;
-                game.StartGame();
+                await game.StartGame();
             }
         }
 
@@ -48,15 +47,14 @@ namespace TicTacToe.BL
             var user = _userStorage.GetUserById(connectionId);
             if (user != null)
             {
-                var game = _gameInstanceManager.GetGameInstanceByUser(user);
+                var game = _gameInstanceStorage.GetGameInstanceByUser(user);
                 if (game != null)
                 {
                     game.StopGame();
-                    _gameInstanceManager.RemoveGameInstance(game);
+                    _gameInstanceStorage.RemoveGameInstance(game);
                 }
                 _userStorage.RemoveUser(user);
             }
-
         }
 
         public void HandleUserMessage<TMessage>(string connectionId, TMessage message) where TMessage : BaseMessage
@@ -64,7 +62,7 @@ namespace TicTacToe.BL
             var user = _userStorage.GetUserById(connectionId);
             if (user != null)
             {
-                var game = _gameInstanceManager.GetGameInstanceByUser(user);
+                var game = _gameInstanceStorage.GetGameInstanceByUser(user);
                 if (game != null)
                 {
                     game.HandleUserMessage(user, message);
