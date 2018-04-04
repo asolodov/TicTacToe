@@ -3,6 +3,7 @@ const DrawManager = require('./drawManager');
 const GridModel = require('./gridModel').GridModel;
 const CellState = require('./gridModel').CellState;
 const WinService = require('./winService').WinService;
+const ConnectionManager = require('./connectionManager');
 
 module.exports = (function () {
     const defaultOptions = {
@@ -24,6 +25,10 @@ module.exports = (function () {
                 }
             });
         this._winService = new WinService(this._gridModel, { winCellsCount: 4 });
+        this._connectionManager = new ConnectionManager({
+            hubUrl: '/gamehub',
+            OnPlayerStepMessage: this._cellSelectionReceived.bind(this)
+        });
     };
 
     _.extend(TicTacToe.prototype, {
@@ -33,7 +38,7 @@ module.exports = (function () {
             this._drawManager.reDrawModel();
             this._last = CellState.TIC;
         },
-        _cellSelected: function (cell) {
+        _drawSelectedCell: function (cell) {
             this._last = this._last === CellState.TIC ? CellState.TOE : CellState.TIC;
             cell.state = this._last;
 
@@ -42,6 +47,19 @@ module.exports = (function () {
             if (winner) {
                 this._drawManager.drawWinner(winner);
             }
+        },
+        _cellSelected: function (cell) {
+            this._connectionManager.sendUserStep({
+                x: cell.x,
+                y: cell.y
+            });
+
+            this._drawSelectedCell(cell);
+        },
+        _cellSelectionReceived: function (cell) {
+            debugger;
+            var model = this._gridModel.getCell(cell.X, cell.Y);
+            this._drawSelectedCell(model);
         }
     });
 
