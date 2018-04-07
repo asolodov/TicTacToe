@@ -1,4 +1,4 @@
-﻿namespace TicTacToe.BL.Models
+﻿namespace TicTacToe.BL.GameInstance.Models
 {
     public enum CellType
     {

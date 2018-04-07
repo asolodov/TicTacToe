@@ -1,6 +1,6 @@
-﻿using TicTacToe.BL.Models;
+﻿using TicTacToe.BL.Users.Models;
 
-namespace TicTacToe.BL.Interfaces
+namespace TicTacToe.BL.GameInstance.Interfaces
 {
     public interface IGameInstanceStorage
     {

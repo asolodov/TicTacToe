@@ -1,8 +1,11 @@
 ﻿using System.Threading.Tasks;
-using TicTacToe.BL.Interfaces;
-using TicTacToe.BL.Models;
+using TicTacToe.BL.GameInstance.Interfaces;
+using TicTacToe.BL.GameManager.Interfaces;
+using TicTacToe.BL.Users.Interfaces;
+using TicTacToe.BL.Users.Models;
+using TicTacToe.BL.Users.Models.Messages;
 
-namespace TicTacToe.BL
+namespace TicTacToe.BL.GameManager
 {
     public class GameManager : IGameManager
     {

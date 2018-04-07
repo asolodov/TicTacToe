@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
-using TicTacToe.BL.Interfaces;
-using TicTacToe.BL.Models;
-using TicTacToe.BL.Models.Messages;
+using TicTacToe.BL.Users.Interfaces;
+using TicTacToe.BL.Users.Models.Messages;
 using TicTacToe.Hubs;
 using DTO = TicTacToe.DataContracts;
 

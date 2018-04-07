@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TicTacToe.BL.Interfaces;
-using TicTacToe.BL.Models.Messages;
+using TicTacToe.BL.GameInstance.Interfaces;
+using TicTacToe.BL.GameInstance.Models;
+using TicTacToe.BL.Users.Interfaces;
+using TicTacToe.BL.Users.Models;
+using TicTacToe.BL.Users.Models.Messages;
 
-namespace TicTacToe.BL.Models
+namespace TicTacToe.BL.GameInstance
 {
     public class GameInstance : IGameInstance
     {
@@ -17,8 +20,6 @@ namespace TicTacToe.BL.Models
         public Player PlayerOne { get; internal set; }
 
         public Player PlayerTwo { get; internal set; }
-
-        public GameState GameState { get; private set; }
 
         public IEnumerable<string> UserIds
         {

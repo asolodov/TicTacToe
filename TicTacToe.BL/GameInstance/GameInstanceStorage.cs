@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using TicTacToe.BL.Interfaces;
-using TicTacToe.BL.Models;
+using TicTacToe.BL.GameInstance.Interfaces;
+using TicTacToe.BL.Users.Models;
 
-namespace TicTacToe.BL
+namespace TicTacToe.BL.GameInstance
 {
     public class GameInstanceStorage : IGameInstanceStorage
     {

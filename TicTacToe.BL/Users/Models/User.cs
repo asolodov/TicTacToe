@@ -1,4 +1,4 @@
-﻿namespace TicTacToe.BL.Models
+﻿namespace TicTacToe.BL.Users.Models
 {
     public class User
     {

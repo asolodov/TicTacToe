@@ -7,7 +7,7 @@ namespace TicTacToe.AutoMapping
     {
         public TicTacToeProfile()
         {
-            CreateMap<BL.Models.Messages.GameStartedMessage, GameStartedMessage>();
+            CreateMap<BL.Users.Models.Messages.GameStartedMessage, GameStartedMessage>();
         }
     }
 }

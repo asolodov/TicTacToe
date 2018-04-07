@@ -1,4 +1,4 @@
-﻿namespace TicTacToe.BL.Models
+﻿namespace TicTacToe.BL.Users.Models.Messages
 {
     public abstract class BaseMessage
     {

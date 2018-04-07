@@ -3,8 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using TicTacToe.Hubs;
-using TicTacToe.BL;
-using TicTacToe.BL.Interfaces;
+using TicTacToe.BL.GameManager.Interfaces;
+using TicTacToe.BL.GameManager;
+using TicTacToe.BL.Users.Interfaces;
 
 namespace TicTacToe
 {

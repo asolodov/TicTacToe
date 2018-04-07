@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using TicTacToe.BL.Models;
+using TicTacToe.BL.Users.Models;
+using TicTacToe.BL.Users.Models.Messages;
 
-namespace TicTacToe.BL.Interfaces
+namespace TicTacToe.BL.GameInstance.Interfaces
 {
     public interface IGameInstance
     {

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
-using TicTacToe.BL.Interfaces;
+using TicTacToe.BL.GameManager.Interfaces;
 
 namespace TicTacToe.Hubs
 {

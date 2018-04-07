@@ -1,4 +1,6 @@
-﻿namespace TicTacToe.BL.Models
+﻿using TicTacToe.BL.Users.Models;
+
+namespace TicTacToe.BL.GameInstance.Models
 {
     public class Player : User
     {
