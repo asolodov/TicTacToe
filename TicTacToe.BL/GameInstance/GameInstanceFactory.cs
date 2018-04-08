@@ -1,4 +1,5 @@
-﻿using TicTacToe.BL.GameInstance.Interfaces;
+﻿using System;
+using TicTacToe.BL.GameInstance.Interfaces;
 using TicTacToe.BL.GameInstance.Models;
 using TicTacToe.BL.Users.Interfaces;
 using TicTacToe.BL.Users.Models;
@@ -16,6 +17,11 @@ namespace TicTacToe.BL.GameInstance
 
         public IGameInstance CreateGameInstance(User userOne, User userTwo)
         {
+            if (userOne == null)
+                throw new ArgumentNullException(nameof(userOne));
+            if (userTwo == null)
+                throw new ArgumentNullException(nameof(userTwo));
+
             return new GameInstance(_userCommunicationService)
             {
                 PlayerOne = new Player(userOne, CellType.Toe),

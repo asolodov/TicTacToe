@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using TicTacToe.BL.GameInstance.Interfaces;
 using TicTacToe.BL.GameInstance.Models;
@@ -42,6 +43,12 @@ namespace TicTacToe.BL.GameInstance
 
         public async Task HandlePlayerActionMessage(User fromUser, PlayerActionMessage action)
         {
+            if (fromUser == null)
+                throw new ArgumentNullException(nameof(fromUser));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
+
         }
     }
 }

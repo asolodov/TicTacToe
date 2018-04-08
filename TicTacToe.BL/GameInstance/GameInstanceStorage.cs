@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TicTacToe.BL.GameInstance.Interfaces;
 using TicTacToe.BL.Users.Models;
 
@@ -10,6 +11,9 @@ namespace TicTacToe.BL.GameInstance
 
         public void AddGameInstance(IGameInstance instance)
         {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
             foreach (var userId in instance.UserIds)
             {
                 _runningGames[userId] = instance;
@@ -18,6 +22,9 @@ namespace TicTacToe.BL.GameInstance
 
         public IGameInstance GetGameInstanceByUser(User user)
         {
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
             if (_runningGames.TryGetValue(user.ConnectionId, out IGameInstance gameInstance))
             {
                 return gameInstance;
@@ -27,6 +34,9 @@ namespace TicTacToe.BL.GameInstance
 
         public void RemoveGameInstance(IGameInstance instance)
         {
+            if (instance == null)
+                throw new ArgumentNullException(nameof(instance));
+
             foreach (var userId in instance.UserIds)
             {
                 _runningGames.Remove(userId);

@@ -12,6 +12,9 @@ namespace TicTacToe.BL.Users
 
         public User CreateUser(string connectionId)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+
             if (!_users.TryGetValue(connectionId, out User user))
             {
                 user = new User();
@@ -22,6 +25,9 @@ namespace TicTacToe.BL.Users
 
         public User GetUserById(string connectionId)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+
             if (_users.TryGetValue(connectionId, out User user))
             {
                 return user;
@@ -31,6 +37,9 @@ namespace TicTacToe.BL.Users
 
         public void RemoveUser(string connectionId)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+
             _users.Remove(connectionId);
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using TicTacToe.BL.GameInstance.Interfaces;
 using TicTacToe.BL.GameManager.Interfaces;
 using TicTacToe.BL.Users.Interfaces;
@@ -30,6 +31,9 @@ namespace TicTacToe.BL.GameManager
 
         public async Task ConnectUser(string connectionId)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+
             //TODO handle concurrency
             var user = _userStorage.CreateUser(connectionId);
             if (_awaitableUser == null)
@@ -47,6 +51,9 @@ namespace TicTacToe.BL.GameManager
 
         public void DisconnectUser(string connectionId)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+
             var user = _userStorage.GetUserById(connectionId);
             if (user != null)
             {
@@ -62,6 +69,11 @@ namespace TicTacToe.BL.GameManager
 
         public async Task HandlePlayerAction(string connectionId, PlayerActionMessage action)
         {
+            if (string.IsNullOrEmpty(connectionId))
+                throw new ArgumentNullException(nameof(connectionId));
+            if (action == null)
+                throw new ArgumentNullException(nameof(action));
+
             var user = _userStorage.GetUserById(connectionId);
             if (user != null)
             {
