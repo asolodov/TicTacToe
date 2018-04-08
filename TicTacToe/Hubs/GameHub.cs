@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Threading.Tasks;
 using TicTacToe.BL.GameManager.Interfaces;
+using TicTacToe.BL.Users.Models.Messages;
+using TicTacToe.DataContracts;
 
 namespace TicTacToe.Hubs
 {
@@ -13,9 +16,10 @@ namespace TicTacToe.Hubs
         {
             _gameManager = gameManager;
         }
-        public Task Send(string message)
+
+        public async Task HandlePlayerAction(PlayerAction action)
         {
-            return Clients.All.InvokeAsync("Send", message + "2222");
+            await _gameManager.HandlePlayerAction(Context.ConnectionId, Mapper.Map<PlayerActionMessage>(action));
         }
 
         public override async Task OnConnectedAsync()

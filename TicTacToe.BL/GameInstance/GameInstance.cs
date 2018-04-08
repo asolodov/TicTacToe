@@ -40,7 +40,7 @@ namespace TicTacToe.BL.GameInstance
         {
         }
 
-        public async Task HandleUserMessage(User fromUser, BaseMessage message)
+        public async Task HandlePlayerActionMessage(User fromUser, PlayerActionMessage action)
         {
         }
     }

@@ -11,6 +11,6 @@ namespace TicTacToe.BL.GameInstance.Interfaces
 
         Task StartGame();
         Task StopGame();
-        Task HandleUserMessage(User fromUser, BaseMessage message);
+        Task HandlePlayerActionMessage(User fromUser, PlayerActionMessage action);
     }
 }

@@ -60,7 +60,7 @@ namespace TicTacToe.BL.GameManager
             }
         }
 
-        public void HandleUserMessage<TMessage>(string connectionId, TMessage message) where TMessage : BaseMessage
+        public async Task HandlePlayerAction(string connectionId, PlayerActionMessage action)
         {
             var user = _userStorage.GetUserById(connectionId);
             if (user != null)
@@ -68,8 +68,7 @@ namespace TicTacToe.BL.GameManager
                 var game = _gameInstanceStorage.GetGameInstanceByUser(user);
                 if (game != null)
                 {
-                    game.HandleUserMessage(user, message);
-
+                    await game.HandlePlayerActionMessage(user, action);
                 }
             }
         }
