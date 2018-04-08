@@ -56,7 +56,7 @@ namespace TicTacToe.BL.GameManager
                     game.StopGame();
                     _gameInstanceStorage.RemoveGameInstance(game);
                 }
-                _userStorage.RemoveUser(user);
+                _userStorage.RemoveUser(connectionId);
             }
         }
 

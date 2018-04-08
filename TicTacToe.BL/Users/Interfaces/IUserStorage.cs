@@ -5,7 +5,7 @@ namespace TicTacToe.BL.Users.Interfaces
     public interface IUserStorage
     {
         User GetUserById(string connectionId);
-        void RemoveUser(User user);
+        void RemoveUser(string connectionId);
         User CreateUser(string connectionId);
     }
 }

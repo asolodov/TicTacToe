@@ -6,7 +6,7 @@ namespace TicTacToe.BL.GameInstance
 {
     public class GameInstanceStorage : IGameInstanceStorage
     {
-        private Dictionary<string, IGameInstance> _runningGames = new Dictionary<string, IGameInstance>();
+        private readonly Dictionary<string, IGameInstance> _runningGames = new Dictionary<string, IGameInstance>();
 
         public void AddGameInstance(IGameInstance instance)
         {
