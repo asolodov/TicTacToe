@@ -5,6 +5,6 @@ namespace TicTacToe.BL.Users.Interfaces
 {
     public interface IUserCommunicationService
     {
-        Task SendGameStartedMessage(string connectionId, GameStartedMessage message);
+        Task SendMessageToUser(string toUserId, BaseGameMessage message);
     }
 }

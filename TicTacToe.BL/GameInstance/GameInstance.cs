@@ -12,6 +12,7 @@ namespace TicTacToe.BL.GameInstance
     public class GameInstance : IGameInstance
     {
         private readonly IUserCommunicationService _userCommunicationService;
+        public CurrentActivePlayer CurrentActivePlayer { get; private set; }
 
         public GameInstance(IUserCommunicationService userCommunicationService)
         {
@@ -33,12 +34,14 @@ namespace TicTacToe.BL.GameInstance
 
         public async Task StartGame()
         {
-            await _userCommunicationService.SendGameStartedMessage(PlayerOne.ConnectionId, new GameStartedMessage(PlayerOne.PlayerCell));
-            await _userCommunicationService.SendGameStartedMessage(PlayerTwo.ConnectionId, new GameStartedMessage(PlayerTwo.PlayerCell));
+            CurrentActivePlayer = CurrentActivePlayer.PlayerOne;
+            await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, new GameStartedMessage(PlayerOne.PlayerCell, true));
+            await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, new GameStartedMessage(PlayerTwo.PlayerCell, false));
         }
 
         public async Task StopGame()
         {
+
         }
 
         public async Task HandlePlayerActionMessage(User fromUser, PlayerActionMessage action)
@@ -48,7 +51,23 @@ namespace TicTacToe.BL.GameInstance
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-
+            switch (CurrentActivePlayer)
+            {
+                case CurrentActivePlayer.PlayerOne:
+                    if (PlayerOne.ConnectionId == fromUser.ConnectionId)
+                    {
+                        await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, action);
+                        CurrentActivePlayer = CurrentActivePlayer.PlayerTwo;
+                    }
+                    break;
+                case CurrentActivePlayer.PlayerTwo:
+                    if (PlayerTwo.ConnectionId == fromUser.ConnectionId)
+                    {
+                        await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, action);
+                        CurrentActivePlayer = CurrentActivePlayer.PlayerOne;
+                    }
+                    break;
+            }
         }
     }
 }

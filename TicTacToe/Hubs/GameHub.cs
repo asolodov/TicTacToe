@@ -17,9 +17,9 @@ namespace TicTacToe.Hubs
             _gameManager = gameManager;
         }
 
-        public async Task HandlePlayerAction(PlayerAction action)
+        public async Task HandlePlayerAction(DataContracts.PlayerActionMessage action)
         {
-            await _gameManager.HandlePlayerAction(Context.ConnectionId, Mapper.Map<PlayerActionMessage>(action));
+            await _gameManager.HandlePlayerActionMessage(Context.ConnectionId, Mapper.Map<BL.Users.Models.Messages.PlayerActionMessage>(action));
         }
 
         public override async Task OnConnectedAsync()

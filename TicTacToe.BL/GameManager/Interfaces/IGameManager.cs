@@ -7,6 +7,6 @@ namespace TicTacToe.BL.GameManager.Interfaces
     {
         Task ConnectUser(string connectionId);
         void DisconnectUser(string connectionId);
-        Task HandlePlayerAction(string connectionId, PlayerActionMessage action);
+        Task HandlePlayerActionMessage(string fromUserId, PlayerActionMessage action);
     }
 }

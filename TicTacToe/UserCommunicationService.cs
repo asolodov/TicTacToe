@@ -12,6 +12,8 @@ namespace TicTacToe
     public class UserCommunicationService : IUserCommunicationService
     {
         private const string GameStarted = "GameStarted";
+        private const string GameStopped = "GameStopped";
+        private const string PlayerAction = "PlayerAction";
 
         private readonly IHubContext<GameHub> _hubContext;
 
@@ -20,15 +22,15 @@ namespace TicTacToe
             _hubContext = hubContext;
         }
 
-        public async Task SendGameStartedMessage(string connectionId, GameStartedMessage message)
+        public async Task SendMessageToUser(string toUserId, BaseGameMessage message)
         {
-            if (string.IsNullOrEmpty(connectionId))
-                throw new ArgumentNullException(nameof(connectionId));
+            if (string.IsNullOrEmpty(toUserId))
+                throw new ArgumentNullException(nameof(toUserId));
             if (message == null)
                 throw new ArgumentNullException(nameof(message));
 
-            var dto = Mapper.Map<DTO.GameStartedMessage>(message);
-            await SendMessage(connectionId, GameStarted, dto);
+            var dto = Mapper.Map<DTO.BaseGameMessage>(message);
+            await SendMessage(toUserId, dto.MessageType, dto);
         }
 
         private async Task SendMessage(string connectionId, string method, object message)

@@ -67,14 +67,14 @@ namespace TicTacToe.BL.GameManager
             }
         }
 
-        public async Task HandlePlayerAction(string connectionId, PlayerActionMessage action)
+        public async Task HandlePlayerActionMessage(string fromUserId, PlayerActionMessage action)
         {
-            if (string.IsNullOrEmpty(connectionId))
-                throw new ArgumentNullException(nameof(connectionId));
+            if (string.IsNullOrEmpty(fromUserId))
+                throw new ArgumentNullException(nameof(fromUserId));
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-            var user = _userStorage.GetUserById(connectionId);
+            var user = _userStorage.GetUserById(fromUserId);
             if (user != null)
             {
                 var game = _gameInstanceStorage.GetGameInstanceByUser(user);

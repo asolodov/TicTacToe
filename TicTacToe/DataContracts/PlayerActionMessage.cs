@@ -3,9 +3,11 @@ using TicTacToe.Infrastructure;
 
 namespace TicTacToe.DataContracts
 {
-    [DataContract(Name = Constants.DataContracts.PlayerAction)]
-    public class PlayerAction
+    [DataContract(Name = Constants.DataContracts.PlayerActionMessage)]
+    public class PlayerActionMessage : BaseGameMessage
     {
+        public override string MessageType => Constants.MessageTypes.PlayerAction;
+
         [DataMember(Name = Constants.DataMembers.CellPosition)]
         public CellPosition CellPosition { get; set; }
 
