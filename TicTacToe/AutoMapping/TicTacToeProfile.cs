@@ -16,6 +16,12 @@ namespace TicTacToe.AutoMapping
             CreateMap<BL.Users.Models.Messages.PlayerActionMessage, PlayerActionMessage>();
             CreateMap<BL.Users.Models.Messages.GameStoppedMessage, GameStoppedMessage>();
 
+
+            CreateMap<BaseGameMessage, BL.Users.Models.Messages.BaseGameMessage>()
+                .Include<PlayerActionMessage, BL.Users.Models.Messages.PlayerActionMessage>();
+
+            CreateMap<PlayerActionMessage, BL.Users.Models.Messages.PlayerActionMessage>();
+
             CreateMap<BL.GameInstance.Models.CellPosition, CellPosition>();
             CreateMap<CellPosition, BL.GameInstance.Models.CellPosition>();
 
