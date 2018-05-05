@@ -28,7 +28,7 @@ module.exports = (function () {
         this._connectionManager = new ConnectionManager({
             hubUrl: '/gamehub',
             onGameStarted: this._gameStarted.bind(this),
-            onGameStopped: this._gameStarted.bind(this),
+            onGameStopped: this._gameStopped.bind(this),
             onStateUpdate: this._stateUpdateReceived.bind(this)
         });
     };
@@ -62,7 +62,7 @@ module.exports = (function () {
             });
 
             this._drawSelectedCell(cell, this._cellType);
-            this._isActive = false;//TODO get from server
+            this._isActive = false;
         },
         _gameStarted: function (message) {
             console.log(message);
@@ -71,7 +71,9 @@ module.exports = (function () {
         },
         _gameStopped: function (message) {
             console.log(message);
-
+            console.log('reset');
+            this._gridModel.reset();
+            this._drawManager.reDrawModel();
         },
         _stateUpdateReceived: function (message) {
             console.log(message);

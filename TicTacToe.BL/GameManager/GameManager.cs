@@ -49,12 +49,12 @@ namespace TicTacToe.BL.GameManager
             }
         }
 
-        public async Task DisconnectUser(string connectionId)
+        public async Task DisconnectUser(string disconnectedId)
         {
-            if (string.IsNullOrEmpty(connectionId))
-                throw new ArgumentNullException(nameof(connectionId));
+            if (string.IsNullOrEmpty(disconnectedId))
+                throw new ArgumentNullException(nameof(disconnectedId));
 
-            var user = _userStorage.GetUserById(connectionId);
+            var user = _userStorage.GetUserById(disconnectedId);
             if (user != null)
             {
                 var game = _gameInstanceStorage.GetGameInstanceByUser(user);
@@ -62,8 +62,15 @@ namespace TicTacToe.BL.GameManager
                 {
                     await game.StopGame();
                     _gameInstanceStorage.RemoveGameInstance(game);
+                    foreach (var gameUser in game.UserIds)
+                    {
+                        if (gameUser != disconnectedId)
+                        {
+                            await ConnectUser(gameUser);
+                        }
+                    }
                 }
-                _userStorage.RemoveUser(connectionId);
+                _userStorage.RemoveUser(disconnectedId);
             }
         }
 

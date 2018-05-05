@@ -124,6 +124,13 @@ const GridModel = (function () {
                 }
                 return diagsGroup;
             },
+            reset: function () {
+                for (let i = 0; i < this.width; i++) {
+                    for (let j = 0; j < this.height; j++) {
+                        this._getCell(i, j).state = CellState.NONE;
+                    }
+                }
+            },
             _init: function (height, width) {
                 this._height = height;
                 this._width = width;
