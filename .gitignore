@@ -4,3 +4,4 @@ bin
 node_modules
 obj
 /packages/*
+/TicTacToe/TicTacToe.csproj.user
