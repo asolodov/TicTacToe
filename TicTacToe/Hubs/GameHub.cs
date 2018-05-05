@@ -30,7 +30,7 @@ namespace TicTacToe.Hubs
 
         public override async Task OnDisconnectedAsync(Exception exception)
         {
-            _gameManager.DisconnectUser(Context.ConnectionId);
+            await _gameManager.DisconnectUser(Context.ConnectionId);
             await base.OnDisconnectedAsync(exception);
         }
 

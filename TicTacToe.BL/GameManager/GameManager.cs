@@ -49,7 +49,7 @@ namespace TicTacToe.BL.GameManager
             }
         }
 
-        public void DisconnectUser(string connectionId)
+        public async Task DisconnectUser(string connectionId)
         {
             if (string.IsNullOrEmpty(connectionId))
                 throw new ArgumentNullException(nameof(connectionId));
@@ -60,7 +60,7 @@ namespace TicTacToe.BL.GameManager
                 var game = _gameInstanceStorage.GetGameInstanceByUser(user);
                 if (game != null)
                 {
-                    game.StopGame();
+                    await game.StopGame();
                     _gameInstanceStorage.RemoveGameInstance(game);
                 }
                 _userStorage.RemoveUser(connectionId);

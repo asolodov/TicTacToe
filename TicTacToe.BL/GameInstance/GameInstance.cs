@@ -12,7 +12,7 @@ namespace TicTacToe.BL.GameInstance
     public class GameInstance : IGameInstance
     {
         private readonly IUserCommunicationService _userCommunicationService;
-        public CurrentActivePlayer CurrentActivePlayer { get; private set; }
+        private Player _currentActivePlayer;
 
         public GameInstance(IUserCommunicationService userCommunicationService)
         {
@@ -34,14 +34,16 @@ namespace TicTacToe.BL.GameInstance
 
         public async Task StartGame()
         {
-            CurrentActivePlayer = CurrentActivePlayer.PlayerOne;
-            await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, new GameStartedMessage(PlayerOne.PlayerCell, true));
-            await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, new GameStartedMessage(PlayerTwo.PlayerCell, false));
+            UpdateCurrentActivePlayer();
+
+            await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, new GameStartedMessage(PlayerOne.PlayerCell, IsPlayerActive(PlayerOne)));
+            await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, new GameStartedMessage(PlayerTwo.PlayerCell, IsPlayerActive(PlayerTwo)));
         }
 
         public async Task StopGame()
         {
-
+            await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, new GameStoppedMessage());
+            await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, new GameStoppedMessage());
         }
 
         public async Task HandlePlayerActionMessage(User fromUser, PlayerActionMessage action)
@@ -51,23 +53,24 @@ namespace TicTacToe.BL.GameInstance
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
 
-            switch (CurrentActivePlayer)
+            if ((IsPlayerActive(PlayerOne) && PlayerOne.ConnectionId == fromUser.ConnectionId) ||
+                (IsPlayerActive(PlayerTwo) && PlayerTwo.ConnectionId == fromUser.ConnectionId))
             {
-                case CurrentActivePlayer.PlayerOne:
-                    if (PlayerOne.ConnectionId == fromUser.ConnectionId)
-                    {
-                        await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, action);
-                        CurrentActivePlayer = CurrentActivePlayer.PlayerTwo;
-                    }
-                    break;
-                case CurrentActivePlayer.PlayerTwo:
-                    if (PlayerTwo.ConnectionId == fromUser.ConnectionId)
-                    {
-                        await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, action);
-                        CurrentActivePlayer = CurrentActivePlayer.PlayerOne;
-                    }
-                    break;
+                UpdateCurrentActivePlayer();
+
+                await _userCommunicationService.SendMessageToUser(PlayerOne.ConnectionId, new StateUpdateMessage(action, IsPlayerActive(PlayerOne)));
+                await _userCommunicationService.SendMessageToUser(PlayerTwo.ConnectionId, new StateUpdateMessage(action, IsPlayerActive(PlayerTwo)));
             }
+        }
+
+        private void UpdateCurrentActivePlayer()
+        {
+            _currentActivePlayer = _currentActivePlayer == PlayerOne ? PlayerTwo : PlayerOne;
+        }
+
+        private bool IsPlayerActive(Player player)
+        {
+            return _currentActivePlayer == player;
         }
     }
 }

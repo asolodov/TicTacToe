@@ -27,7 +27,9 @@ module.exports = (function () {
         this._winService = new WinService(this._gridModel, { winCellsCount: 4 });
         this._connectionManager = new ConnectionManager({
             hubUrl: '/gamehub',
-            OnPlayerStepMessage: this._cellSelectionReceived.bind(this)
+            onGameStarted: this._gameStarted.bind(this),
+            onGameStopped: this._gameStarted.bind(this),
+            onStateUpdate: this._stateUpdateReceived.bind(this)
         });
     };
 
@@ -38,9 +40,10 @@ module.exports = (function () {
             this._drawManager.reDrawModel();
             this._last = CellState.TIC;
         },
-        _drawSelectedCell: function (cell) {
-            this._last = this._last === CellState.TIC ? CellState.TOE : CellState.TIC;
-            cell.state = this._last;
+        _drawSelectedCell: function (cell, cellType) {
+            //this._last = this._last === CellState.TIC ? CellState.TOE : CellState.TIC;
+            //cell.state = this._last;
+            cell.state = cellType;
 
             this._drawManager.reDrawModel();
             const winner = this._winService.checkWinner();
@@ -49,18 +52,33 @@ module.exports = (function () {
             }
         },
         _cellSelected: function (cell) {
-            this._connectionManager.sendUserStep({
+            console.log(cell);
+            if (!this._isActive)
+                return;
+
+            this._connectionManager.sendUserStep(this._cellType, {
                 x: cell.x,
                 y: cell.y
             });
 
-            this._drawSelectedCell(cell);
+            this._drawSelectedCell(cell, this._cellType);
+            this._isActive = false;//TODO get from server
         },
-        _cellSelectionReceived: function (cell) {
-            debugger;
-            var model = this._gridModel.getCell(cell.X, cell.Y);
-            this._drawSelectedCell(model);
-        }
+        _gameStarted: function (message) {
+            console.log(message);
+            this._cellType = message.cellType;
+            this._isActive = message.isActive;
+        },
+        _gameStopped: function (message) {
+            console.log(message);
+
+        },
+        _stateUpdateReceived: function (message) {
+            console.log(message);
+            var model = this._gridModel.getCell(message.cellPosition.x, message.cellPosition.y);
+            this._drawSelectedCell(model, message.cellType);
+            this._isActive = message.isActive;
+        },
     });
 
     return TicTacToe;

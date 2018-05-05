@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using DTO = TicTacToe.DataContracts;
 using TicTacToe.BL.Users.Models.Messages;
 using TicTacToe.BL.GameInstance.Models;
+using TicTacToe.UnitTests.Infrastructure;
 
 namespace TicTacToe.UnitTests
 {
@@ -49,7 +50,7 @@ namespace TicTacToe.UnitTests
                 {
                     CellType = DTO.CellType.Toe,
                     IsActive = true
-                }).SetName("BL_To_DTO_GameStartedMessage");
+                }).SetName("AutoMappingTests_BL_To_DTO_GameStartedMessage");
 
             yield return new TestCaseData(
                 new GameStoppedMessage()
@@ -59,7 +60,7 @@ namespace TicTacToe.UnitTests
                 new DTO.GameStoppedMessage()
                 {
                     Reason = "Test"
-                }).SetName("BL_To_DTO_GameStoppedMessage");
+                }).SetName("AutoMappingTests_BL_To_DTO_GameStoppedMessage");
 
             yield return new TestCaseData(
                 new PlayerActionMessage()
@@ -79,7 +80,7 @@ namespace TicTacToe.UnitTests
                         Y = 5
                     },
                     CellType = DTO.CellType.Toe
-                }).SetName("BL_To_DTO_PlayerActionMessage");
+                }).SetName("AutoMappingTests_BL_To_DTO_PlayerActionMessage");
         }
 
 
@@ -103,7 +104,7 @@ namespace TicTacToe.UnitTests
                         Y = 5
                     },
                     CellType = CellType.Toe
-                }).SetName("DTO_To_BL_PlayerActionMessage");
+                }).SetName("AutoMappingTests_DTO_To_BL_PlayerActionMessage");
         }
     }
 }

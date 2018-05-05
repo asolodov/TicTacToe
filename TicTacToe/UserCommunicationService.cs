@@ -11,10 +11,6 @@ namespace TicTacToe
 {
     public class UserCommunicationService : IUserCommunicationService
     {
-        private const string GameStarted = "GameStarted";
-        private const string GameStopped = "GameStopped";
-        private const string PlayerAction = "PlayerAction";
-
         private readonly IHubContext<GameHub> _hubContext;
 
         public UserCommunicationService(IHubContext<GameHub> hubContext)

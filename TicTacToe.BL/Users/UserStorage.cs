@@ -17,7 +17,10 @@ namespace TicTacToe.BL.Users
 
             if (!_users.TryGetValue(connectionId, out User user))
             {
-                user = new User();
+                user = new User()
+                {
+                    ConnectionId = connectionId
+                };
                 _users[connectionId] = user;
             }
             return user;

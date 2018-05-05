@@ -15,5 +15,7 @@ namespace TicTacToe.BL.GameInstance.Models
             PlayerCell = cellType;
         }
         public CellType PlayerCell { get; set; }
+
+        public bool IsActive { get; set; }
     }
 }
