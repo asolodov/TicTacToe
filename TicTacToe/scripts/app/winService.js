@@ -1,68 +1,66 @@
-﻿const _ = require('lodash');
-const CellState = require('./gridModel').CellState;
+﻿import * as _ from 'lodash';
+import { CellState } from './gridModel';
 
-const WinType = {
+export const WinType = {
     COLUMN: 0,
     ROW: 1,
     UP_DIAGONAL: 2,
     DOWN_DIAGONAL: 3
 };
 
-const WinService = (function () {
-    const defaultOptions = {
-        winCellsCount: 3
-    };
 
-    function WinService(gridModel, options) {
+const defaultOptions = {
+    winCellsCount: 3
+};
+
+export class WinService {
+    constructor(gridModel, options) {
         this._model = gridModel;
         this._options = _.extend({}, defaultOptions, options);
         if (this._options.winCellsCount > this._model.height ||
             this._options.winCellsCount > this._model.width) {
             throw new Error('Incorrect model sizes');
         }
-    };
+    }
 
-    _.extend(WinService.prototype,
-        {
-            checkWinner: function () {
-                return this._checkWinInRows()
-                    || this._checkWinInCols()
-                    || this._checkWinInUpDiagonalies()
-                    || this._checkWinInDownDiagonalies();
-            },
-            _checkWinIn: function (cellGroups, minCellCount) {
-                const lngFilter = _.filter(cellGroups, group => group.length >= minCellCount);
-                const strGroupsArr = WinSearchHelper.mapCellGroupsToStringGroups(lngFilter);
+    checkWinner() {
+        return this._checkWinInRows()
+            || this._checkWinInCols()
+            || this._checkWinInUpDiagonalies()
+            || this._checkWinInDownDiagonalies();
+    }
 
-                return WinSearchHelper.searchWinnerInStringGroups(strGroupsArr, CellState.TIC, minCellCount)
-                    || WinSearchHelper.searchWinnerInStringGroups(strGroupsArr, CellState.TOE, minCellCount);
-            },
-            _checkWinInRows() {
-                const winner = this._checkWinIn(this._model.getRows(), this._options.winCellsCount);
-                return winner ? _.extend(winner, { type: WinType.ROW }) : null;
-            },
-            _checkWinInCols() {
-                const winner = this._checkWinIn(this._model.getColumns(), this._options.winCellsCount);
-                return winner ? _.extend(winner, { type: WinType.COLUMN }) : null;
-            },
-            _checkWinInUpDiagonalies() {
-                const winner = this._checkWinIn(this._model.getUpDiagonalies(), this._options.winCellsCount);
-                return winner ? _.extend(winner, { type: WinType.UP_DIAGONAL }) : null;
-            },
-            _checkWinInDownDiagonalies() {
-                const winner = this._checkWinIn(this._model.getDownDiagonalies(), this._options.winCellsCount);
-                return winner ? _.extend(winner, { type: WinType.DOWN_DIAGONAL }) : null;
-            }
-        });
+    _checkWinIn(cellGroups, minCellCount) {
+        const lngFilter = _.filter(cellGroups, group => group.length >= minCellCount);
+        const strGroupsArr = WinSearchHelper.mapCellGroupsToStringGroups(lngFilter);
 
-    return WinService;
-}());
+        return WinSearchHelper.searchWinnerInStringGroups(strGroupsArr, CellState.TIC, minCellCount)
+            || WinSearchHelper.searchWinnerInStringGroups(strGroupsArr, CellState.TOE, minCellCount);
+    }
 
-const WinSearchHelper = (function () {
-    function WinSearchHelper() {
-    };
+    _checkWinInRows() {
+        const winner = this._checkWinIn(this._model.getRows(), this._options.winCellsCount);
+        return winner ? _.extend(winner, { type: WinType.ROW }) : null;
+    }
 
-    WinSearchHelper.searchWinnerInStringGroups = function (cellStringGroups, searchState, winCellCount) {
+    _checkWinInCols() {
+        const winner = this._checkWinIn(this._model.getColumns(), this._options.winCellsCount);
+        return winner ? _.extend(winner, { type: WinType.COLUMN }) : null;
+    }
+
+    _checkWinInUpDiagonalies() {
+        const winner = this._checkWinIn(this._model.getUpDiagonalies(), this._options.winCellsCount);
+        return winner ? _.extend(winner, { type: WinType.UP_DIAGONAL }) : null;
+    }
+
+    _checkWinInDownDiagonalies() {
+        const winner = this._checkWinIn(this._model.getDownDiagonalies(), this._options.winCellsCount);
+        return winner ? _.extend(winner, { type: WinType.DOWN_DIAGONAL }) : null;
+    }
+}
+
+class WinSearchHelper {
+    static searchWinnerInStringGroups(cellStringGroups, searchState, winCellCount) {
         const arr = Array(winCellCount + 1).join(searchState.toString());
         for (let i = 0; i < cellStringGroups.length; i++) {
             const obj = cellStringGroups[i];
@@ -74,27 +72,20 @@ const WinSearchHelper = (function () {
                 };
             }
         }
-    };
+    }
 
-    WinSearchHelper.mapCellGroupsToStringGroups = function (cellGroups) {
+    static mapCellGroupsToStringGroups(cellGroups) {
         return cellGroups.map(group => {
             return {
                 str: WinSearchHelper.mapCellsToString(group),
                 group: group
             };
         });
-    };
+    }
 
-    WinSearchHelper.mapCellsToString = function (cells) {
+    static mapCellsToString(cells) {
         return cells.map(cell => {
             return cell.state !== CellState.NONE ? cell.state.toString() : '-';
         }).join('');
-    };
-
-    return WinSearchHelper;
-}());
-
-module.exports = {
-    WinService,
-    WinType
-};
+    }
+}

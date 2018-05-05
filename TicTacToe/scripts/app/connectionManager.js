@@ -1,7 +1,6 @@
-﻿const signalR = require('@aspnet/signalr-client');
+﻿import * as signalR from '@aspnet/signalr-client'
 
-class ConnectionManager {
-
+export default class ConnectionManager {
     constructor(options) {
         var defaultOptions = {
             hubUrl: '',
@@ -35,5 +34,3 @@ class ConnectionManager {
         });
     }
 }
-
-module.exports = ConnectionManager;
