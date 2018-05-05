@@ -1,4 +1,6 @@
-﻿namespace TicTacToe.UnitTests.Infrastructure
+﻿using TicTacToe.Infrastructure;
+
+namespace TicTacToe.UnitTests.Infrastructure
 {
     public static class AutoMapperInitilaizer
     {

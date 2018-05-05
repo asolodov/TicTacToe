@@ -1,5 +1,5 @@
 ﻿using TicTacToe.BL.GameManager.Interfaces;
-namespace TicTacToe
+namespace TicTacToe.Infrastructure
 {
     public static class AutoMapperConfig
     {

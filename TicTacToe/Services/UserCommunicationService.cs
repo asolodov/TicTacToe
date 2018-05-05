@@ -7,7 +7,7 @@ using TicTacToe.BL.Users.Models.Messages;
 using TicTacToe.Hubs;
 using DTO = TicTacToe.DataContracts;
 
-namespace TicTacToe
+namespace TicTacToe.Services
 {
     public class UserCommunicationService : IUserCommunicationService
     {
