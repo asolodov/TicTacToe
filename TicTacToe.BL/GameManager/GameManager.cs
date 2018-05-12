@@ -10,7 +10,8 @@ namespace TicTacToe.BL.GameManager
 {
     public class GameManager : IGameManager
     {
-        private User _awaitableUser;
+        private readonly object _sync = new object();
+        private volatile User _awaitableUser;
 
         private readonly IUserCommunicationService _userCommunicationService;
         private readonly IUserStorage _userStorage;
@@ -34,17 +35,19 @@ namespace TicTacToe.BL.GameManager
             if (string.IsNullOrEmpty(connectionId))
                 throw new ArgumentNullException(nameof(connectionId));
 
-            //TODO handle concurrency
             var user = _userStorage.CreateUser(connectionId);
-            if (_awaitableUser == null)
+
+            User awaitable;
+            lock (_sync)
             {
-                _awaitableUser = user;
+                awaitable = _awaitableUser;
+                _awaitableUser = _awaitableUser != null ? null : user;
             }
-            else
+
+            if (awaitable != null)
             {
-                var game = _gameInstanceFactory.CreateGameInstance(_awaitableUser, user);
+                var game = _gameInstanceFactory.CreateGameInstance(awaitable, user);
                 _gameInstanceStorage.AddGameInstance(game);
-                _awaitableUser = null;
                 await game.StartGame();
             }
         }
